@@ -1,0 +1,65 @@
+<!-- Search Bar -->
+ <div [formGroup]="searchForm" class="search-input">
+  <mat-form-field appearance="outline" class="search-bar">
+    <mat-label>Search Products</mat-label>
+    <input matInput formControlName="search" placeholder="Search for products...">
+  </mat-form-field>
+</div>
+
+<!-- Loading Spinner -->
+<div *ngIf="loading$ | async" class="loading-spinner">
+  <mat-spinner></mat-spinner>
+  <p> Loading products ...</p>
+</div>
+
+<!-- Error message -->
+<div *ngIf="error$ | async as error">
+  <h3> Error </h3>
+  <span>{{error.name}}</span> : <span>{{error.message}}</span>
+  <div>
+    <button mat-mini-fab (click)="retry()">
+      <mat-icon>autorenew</mat-icon>
+    </button>
+  </div>
+</div>
+
+<!-- Products List -->
+<div *ngIf="(products$ | async)?.length; else noProducts">
+  <div class="product-grid">
+    <div *ngFor="let product of products$ | async">
+      <mat-card appearance="outlined" (click)="loadProduct(product.id)">
+        <mat-card-header>
+          <mat-card-title>{{ product.title }}</mat-card-title>
+        </mat-card-header>
+        <img mat-card-image [src]="product.thumbnail">
+        <mat-card-content>
+          <p>{{ product.description }}</p>
+          <div class="pricing">
+            <span class="price">{{ product.price }} €</span>
+            <span class="discount">(-{{ product.discountPercentage }}%)</span>
+          </div>
+          <p class="rating">⭐ {{ product.rating }} / 5</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<!-- Pagination -->
+<div class="pagination" *ngIf="(products$ | async)?.length">
+  <button mat-mini-fab (click)="previousProductPage()" [disabled]="currentPage === 1">
+    <mat-icon>navigate_before</mat-icon>
+  </button>
+  <span> Page {{ currentPage }} from {{totalPages}} </span>
+  <button mat-mini-fab (click)="nextProductPage()" [disabled]="isNextPageDisabled()">
+    <mat-icon>navigate_next</mat-icon>
+  </button>
+</div>
+
+<!-- Content to display when there are no products -->
+<ng-template #noProducts>
+  <p>No products available</p>
+</ng-template>
+
+
+  

@@ -1,0 +1,50 @@
+<!-- Loading Spinner -->
+<div *ngIf="loading$ | async" class="loading-spinner">
+    <mat-spinner></mat-spinner>
+    <p>Loading product details...</p>
+</div>
+  
+<!-- Error message -->
+<div *ngIf="error$ | async as error">
+    <h3> Error </h3>
+    <span>{{error.name}}</span> : <span>{{error.message}}</span>
+</div>
+
+<div class="product-container" *ngIf="product$ | async as product">
+  
+    <!-- Product Image Gallery -->
+    <div class="product-images">
+        <img class="main-image" [src]="mainImage || product.thumbnail" [alt]="product.title">
+        <div class="thumbnail-gallery">
+        <img *ngFor="let image of product.images" class="thumbnail" [src]="image" (click)="changeMainImage(image)">
+        </div>
+    </div>
+
+    <!-- Product Details Section -->
+    <div class="product-info">
+        <h1 class="product-title">{{ product.title }}</h1>
+        <h3 class="product-brand">{{ product.brand }} - {{ product.category }}</h3>
+        
+        <p class="description">{{ product.description }}</p>
+
+        <div class="pricing">
+        <span class="price">{{ product.price }} €</span>
+        <span class="discount">(-{{ product.discountPercentage }}%)</span>
+        </div>
+
+        <p class="stock" [ngClass]="{ 'in-stock': product.stock > 0, 'out-of-stock': product.stock === 0 }">
+        {{ product.stock > 0 ? 'In Stock' : 'Out of Stock' }}
+        </p>
+
+        <p class="rating">⭐ {{ product.rating }} / 5</p>
+
+        <p class="min-order">
+        <strong>Minimum Order Quantity:</strong> {{ product.minimumOrderQuantity }} units
+        </p>
+
+    <!-- Action Buttons -->
+    <div class="actions">
+        <button mat-raised-button color="primary" (click)="goBack()"> Back</button>
+    </div>
+    </div>
+</div>
