@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { debounceTime, distinctUntilChanged, Observable, take } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Observable } from 'rxjs';
 import { Product } from '../../store/models/product.model';
 import { loadProducts } from '../../store/actions/product.actions';
 import {  
@@ -70,7 +70,6 @@ export class ProductListViewComponent implements OnInit {
    */
   private calculateTotalPages(): void {
     this.total$.subscribe(total => {
-      console.log(total);
       this.totalPages = Math.ceil(total / this.limit);
     });
   }
@@ -127,7 +126,6 @@ export class ProductListViewComponent implements OnInit {
    * Moves to the next page of products.
    */
   nextProductPage(): void {
-    console.log(this.totalPages)
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
       this.skip = (this.currentPage - 1) * this.limit;
